@@ -25,12 +25,12 @@ function _civicrm_api3_event_receipt_Send_spec(&$spec) {
 function civicrm_api3_event_receipt_Send($params) {
   try{
 
-    $contactId = $params['contact_id'];
     $participantId = $params['participant_id'];
 
     $participant = civicrm_api3('Participant','get',['id' => $participantId])['values'][$participantId];
     $event =  civicrm_api3('Event','get',['id' => $participant['event_id']])['values'][$participant['event_id']];
 
+    $contactId = $participant['contact_id'];
     $location = array();
     if (CRM_Utils_Array::value('is_show_location',$event) == 1) {
       $locationParams = array(
