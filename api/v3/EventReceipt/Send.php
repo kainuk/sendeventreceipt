@@ -40,7 +40,7 @@ function civicrm_api3_event_receipt_Send($params) {
       CRM_Core_BAO_Address::fixAddress($location['address'][1]);
     }
 
-    $lineItem = CRM_Price_BAO_LineItem::getLineItems($participantId);
+    $lineItem[] = CRM_Price_BAO_LineItem::getLineItems($participantId);
 
     /*$customGroup = array();
     //format submitted data
