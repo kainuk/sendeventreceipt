@@ -65,7 +65,7 @@ function civicrm_api3_event_receipt_Send($params) {
     }
 
     $template = CRM_Core_Smarty::singleton();
-    //$template->assign('customGroup',$customGroup);
+    $template->assign('customGroup',$customGroup);
     $template->assign('lineItem',$lineItem);
 
     $values = array(
