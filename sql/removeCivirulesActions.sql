@@ -1,0 +1,1 @@
+delete from civirule_action where `name`='participant_send_event_mail';

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<menu>
+    <item>
+        <path>civicrm/civirule/form/action/participant/sendeventemail</path>
+        <page_callback>CRM_CivirulesActions_Participant_Form_SendEventEmail</page_callback>
+        <title>Participant - Send event email</title>
+        <access_arguments>access CiviCRM</access_arguments>
+        <access_arguments>administer CiviCRM</access_arguments>
+    </item>
+</menu>
