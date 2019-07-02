@@ -42,18 +42,27 @@ function civicrm_api3_event_receipt_Send($params) {
 
     $lineItem[] = CRM_Price_BAO_LineItem::getLineItems($participantId);
 
-    /*$customGroup = array();
+    $cgs = civicrm_api3('CustomGroup', 'get', [
+      'extends' => "participant",
+    ]);
+
+    $customGroup = array();
     //format submitted data
-    foreach ($params['custom'] as $fieldID => $values) {
-      foreach ($values as $fieldValue) {
-        $isPublic = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $fieldValue['custom_group_id'], 'is_public');
+    foreach ($cgs['values'] as $fieldID => $cg) {
+      $fields =  civicrm_api3('CustomField', 'get', [
+        'sequential' => 1,
+        'custom_group_id' => $cg['id'],
+      ]);
+      foreach ($fields['values'] as $fieldValue) {
+        $fieldID = $fieldValue['id'];
+        $isPublic = $cg['is_public'];
         if ($isPublic) {
-          $customFields[$fieldID]['id'] = $fieldID;
-          $formattedValue = CRM_Core_BAO_CustomField::displayValue($fieldValue['value'], $fieldID, $participants[0]->id);
+          $customFields[$fieldID]['id'] = $fieldValue['id'];
+          $formattedValue = CRM_Core_BAO_CustomField::displayValue($fieldValue['value'], $fieldID, $participantId);
           $customGroup[$customFields[$fieldID]['groupTitle']][$customFields[$fieldID]['label']] = str_replace('&nbsp;', '', $formattedValue);
         }
       }
-    }*/
+    }
 
     $template = CRM_Core_Smarty::singleton();
     //$template->assign('customGroup',$customGroup);
