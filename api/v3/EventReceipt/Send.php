@@ -46,7 +46,7 @@ function civicrm_api3_event_receipt_Send($params) {
       'extends' => "participant",
     ]);
 
-    $customGroup = array();
+    $customGroup = [];
     //format submitted data
     foreach ($cgs['values'] as $fieldID => $cg) {
       $fields =  civicrm_api3('CustomField', 'get', [
@@ -58,8 +58,8 @@ function civicrm_api3_event_receipt_Send($params) {
         $isPublic = $cg['is_public'];
         if ($isPublic) {
           $customFields[$fieldID]['id'] = $fieldValue['id'];
-          $formattedValue = CRM_Core_BAO_CustomField::displayValue($fieldValue['value'], $fieldID, $participantId);
-          $customGroup[$customFields[$fieldID]['groupTitle']][$customFields[$fieldID]['label']] = str_replace('&nbsp;', '', $formattedValue);
+          $formattedValue = CRM_Core_BAO_CustomField::displayValue($participant['custom_'.$fieldID], $fieldID, $participantId);
+          $customGroup[$cg['title']][$fieldValue['label']] = str_replace('&nbsp;', '', $formattedValue);
         }
       }
     }
