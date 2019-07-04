@@ -13,7 +13,8 @@ class CRM_CivirulesActions_Participant_SendEventEmail extends CRM_Civirules_Acti
    * @access public
    */
   public function getExtraDataInputUrl($ruleActionId) {
-    return CRM_Utils_System::url('civicrm/civirule/form/action/participant/sendeventemail', 'rule_action_id='.$ruleActionId);
+   // return CRM_Utils_System::url('civicrm/civirule/form/action/participant/sendeventemail', 'rule_action_id='.$ruleActionId);
+    return false;
   }
 
   /**
@@ -24,9 +25,10 @@ class CRM_CivirulesActions_Participant_SendEventEmail extends CRM_Civirules_Acti
    */
   public function processAction(CRM_Civirules_TriggerData_TriggerData $triggerData) {
 
-      $action_params = $this->getActionParameters();
-      Civi::log()->debug(print_r($action_params,true));
-      Civi::log()->debug(print_r($triggerData,true));
+      $participationId = $triggerData->getEntityData('participant')['id'];
+      civicrm_api3('EventReceipt', 'send', [
+      'participant_id' => $participationId,
+    ]);
     }
 
 
