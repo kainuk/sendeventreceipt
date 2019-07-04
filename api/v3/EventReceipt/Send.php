@@ -10,7 +10,9 @@ use CRM_Sendeventreceipt_ExtensionUtil as E;
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC/API+Architecture+Standards
  */
 function _civicrm_api3_event_receipt_Send_spec(&$spec) {
-
+  $spec['participant_id']['api.required'] = 1;
+  $spec['participant_id']['type']  = CRM_Utils_Type::T_INT;
+  $spec['participant_id']['title'] = 'Participant (ID)';
 }
 
 /**
