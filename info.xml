@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="sendeventreceipt" type="module">
   <file>sendeventreceipt</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Send Event Receipt</name>
+  <description>Adds a CiviRule Action that sends the online event receipt</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Klaas Eikelboom</author>
@@ -18,7 +18,7 @@
   <version>1.0</version>
   <develStage>alpha</develStage>
   <compatibility>
-    <ver>4.7</ver>
+    <ver>5.13</ver>
   </compatibility>
   <comments>This is a new, undeveloped module</comments>
   <civix>
