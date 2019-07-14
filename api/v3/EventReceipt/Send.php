@@ -13,6 +13,9 @@ function _civicrm_api3_event_receipt_Send_spec(&$spec) {
   $spec['participant_id']['api.required'] = 1;
   $spec['participant_id']['type']  = CRM_Utils_Type::T_INT;
   $spec['participant_id']['title'] = 'Participant (ID)';
+  $spec['submission_id']['api.required'] = 1;
+  $spec['submission_id']['type']  = CRM_Utils_Type::T_INT;
+  $spec['submission_id']['title'] = 'Webform Submission (ID)';
 }
 
 /**
@@ -31,7 +34,6 @@ function civicrm_api3_event_receipt_Send($params) {
 
     $participant = civicrm_api3('Participant','get',['id' => $participantId])['values'][$participantId];
     $event =  civicrm_api3('Event','get',['id' => $participant['event_id']])['values'][$participant['event_id']];
-    $contactId = $participant['contact_id'];
     $location = array();
     if (CRM_Utils_Array::value('is_show_location',$event) == 1) {
       $locationParams = array(
@@ -46,24 +48,30 @@ function civicrm_api3_event_receipt_Send($params) {
 
     $cgs = civicrm_api3('CustomGroup', 'get', [
       'extends' => "participant",
-    ]);
+    ])['values'];
 
     $customGroup = [];
-    //format submitted data
-    foreach ($cgs['values'] as $fieldID => $cg) {
-      $fields =  civicrm_api3('CustomField', 'get', [
-        'sequential' => 1,
-        'custom_group_id' => $cg['id'],
+
+    $sql = <<<SQL
+    select data,form_key from {webform_submitted_data} d
+    join {webform_component} c on (c.cid = d.cid)
+    where sid=:sid and form_key like '%participant_1_cg%'
+SQL;
+
+    $rset = db_query($sql,[':sid' => $params['submission_id']]);
+
+    while ($record = $rset->fetchAssoc()) {
+      $form_key = $record['form_key'];
+      $data = $record['data'];
+      list(,,,,$cgId,,$fieldID) = explode('_',$form_key);
+      $cgId = substr($cgId,2);
+      $customFields[$fieldID]['id'] = $fieldID;
+      $formattedValue = CRM_Core_BAO_CustomField::displayValue($data, $fieldID, $participantId);
+      $label = civicrm_api3('CustomField', 'getvalue', [
+        'return' => "label",
+        'id' => $fieldID,
       ]);
-      foreach ($fields['values'] as $fieldValue) {
-        $fieldID = $fieldValue['id'];
-        $isPublic = $cg['is_public'];
-        if ($isPublic) {
-          $customFields[$fieldID]['id'] = $fieldValue['id'];
-          $formattedValue = CRM_Core_BAO_CustomField::displayValue($participant['custom_'.$fieldID], $fieldID, $participantId);
-          $customGroup[$cg['title']][$fieldValue['label']] = str_replace('&nbsp;', '', $formattedValue);
-        }
-      }
+      $customGroup[$cgs[$cgId]['title']][$label] = str_replace('&nbsp;', '', $formattedValue);
     }
 
     $template = CRM_Core_Smarty::singleton();
@@ -78,7 +86,7 @@ function civicrm_api3_event_receipt_Send($params) {
       'custom_post_id' => null,
       'payer' => null,
     );
-    CRM_Event_BAO_Event::sendMail($contactId,$values,$participantId);
+    //CRM_Event_BAO_Event::sendMail($contactId,$values,$participantId);
     return civicrm_api3_create_success($values,$params,'EventReceipt','Send');
   }
   catch (Exception $ex) {

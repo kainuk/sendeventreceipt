@@ -25,9 +25,13 @@ class CRM_CivirulesActions_Participant_SendEventEmail extends CRM_Civirules_Acti
    */
   public function processAction(CRM_Civirules_TriggerData_TriggerData $triggerData) {
 
+      if (!$triggerData instanceof CRM_WebformCivirules_TriggerData) {
+        return false;
+      }
       $participationId = $triggerData->getEntityData('participant')['id'];
       civicrm_api3('EventReceipt', 'send', [
       'participant_id' => $participationId,
+      'submission_id'  => $triggerData->getSubmissionId(),
     ]);
     }
 
