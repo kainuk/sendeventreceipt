@@ -86,7 +86,7 @@ SQL;
       'custom_post_id' => null,
       'payer' => null,
     );
-    CRM_Event_BAO_Event::sendMail($contactId,$values,$participantId);
+    CRM_Event_BAO_Event::sendMail($participant['contact_id'],$values,$participantId);
     return civicrm_api3_create_success($values,$params,'EventReceipt','Send');
   }
   catch (Exception $ex) {
