@@ -48,8 +48,7 @@ class CRM_CivirulesActions_Participant_SendEventEmail extends CRM_Civirules_Acti
    * @return bool
    */
   public function doesWorkWithTrigger(CRM_Civirules_Trigger $trigger, CRM_Civirules_BAO_Rule $rule) {
-    $entities = $trigger->getProvidedEntities();
-    if (isset($entities['Participant'])) {
+    if ($trigger instanceof CRM_WebformCivirules_Trigger) {
       return true;
     }
     return false;
