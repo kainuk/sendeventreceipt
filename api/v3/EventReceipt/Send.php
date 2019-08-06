@@ -54,8 +54,8 @@ function civicrm_api3_event_receipt_Send($params) {
 
     $sql = <<<SQL
     select data,form_key from {webform_submitted_data} d
-    join {webform_component} c on (c.cid = d.cid)
-    where sid=:sid and form_key like '%participant_1_cg%custom'
+    join {webform_component} c on (c.cid = d.cid) and (c.nid = d.nid)
+    where sid=:sid and form_key like '%participant_1_cg%custom%'
 SQL;
 
     $rset = db_query($sql,[':sid' => $params['submission_id']]);
