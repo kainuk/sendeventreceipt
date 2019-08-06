@@ -89,6 +89,7 @@ SQL;
       'custom_pre_id' => null,
       'custom_post_id' => null,
       'payer' => null,
+      'customGroup' => $customGroup,
     );
     CRM_Event_BAO_Event::sendMail($participant['contact_id'],$values,$participantId);
     return civicrm_api3_create_success($values,$params,'EventReceipt','Send');
