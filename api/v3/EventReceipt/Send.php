@@ -66,12 +66,16 @@ SQL;
       list(,,,,$cgId,,$fieldID) = explode('_',$form_key);
       $cgId = substr($cgId,2);
       $customFields[$fieldID]['id'] = $fieldID;
-      $formattedValue = CRM_Core_BAO_CustomField::displayValue($data, $fieldID, $participantId);
-      $label = civicrm_api3('CustomField', 'getvalue', [
-        'return' => "label",
-        'id' => $fieldID,
-      ]);
-      $customGroup[$cgs[$cgId]['title']][$label] = str_replace('&nbsp;', '', $formattedValue);
+      try {
+          $label = civicrm_api3('CustomField', 'getvalue', [
+              'return' => "label",
+              'id' => $fieldID,
+          ]);
+          $formattedValue = CRM_Core_BAO_CustomField::displayValue($data, $fieldID, $participantId);
+          $customGroup[$cgs[$cgId]['title']][$label] = str_replace('&nbsp;', '', $formattedValue);
+      } catch (Exception $ex) {
+          // the fieldId is not found in Civi (so it is not added to the customGroups
+      }
     }
 
     $template = CRM_Core_Smarty::singleton();
