@@ -23,6 +23,18 @@ class CRM_Sendeventreceipt_Sender {
 
     $participant = civicrm_api3('Participant','get',['id' => $participantId])['values'][$participantId];
     $event =  civicrm_api3('Event','get',['id' => $participant['event_id']])['values'][$participant['event_id']];
+
+
+    // if the event does not have the email function configured no mail
+    // has to be send, so it is done.
+    if(!$event['is_email_confirm']){
+      $values = array(
+        'params' => array($participantId => $participant),
+        'event' => $event
+      );
+      return $values;
+    }
+
     $location = array();
     if (CRM_Utils_Array::value('is_show_location',$event) == 1) {
       $locationParams = array(
