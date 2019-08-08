@@ -34,8 +34,8 @@ function civicrm_api3_event_receipt_Send($params) {
     return civicrm_api3_create_success($values,$params,'EventReceipt','Send');
   }
   catch (Exception $ex) {
-    Civi::log()->error($ex,'SendeventReceipt');
+    $logMessage ="Event Receipt Send Failed: {$ex->getMessage()} \n {$ex->getTraceAsString()}";
+    Civi::log()->error($logMessage);
     return civicrm_api3_create_error('Event Receipt Send Failed - error is in the log file');
-    throw new API_Exception($ex,1);
   }
 }
